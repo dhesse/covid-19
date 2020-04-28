@@ -23,7 +23,8 @@ jobs:
         pip install -r requirements.txt
     - name: Generate graphs
       run: |
-        python estimate.py    
+        python estimate.py
+        date > results/timestamp    
     - name: Commit changes
       uses: EndBug/add-and-commit@v4
       with:
