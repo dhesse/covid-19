@@ -1,3 +1,5 @@
 *.png
 .vscode
 .ipynb_checkpoints
+.venv
+.idea
