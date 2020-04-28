@@ -6,7 +6,7 @@ name: Periodic at noon utc
 # events but only for the master branch
 on:
   schedule:
-  - cron: 0 12 * * *  # Every day at noon – https://crontab.guru
+  - cron: 0 14 * * *  # Every day at noon – https://crontab.guru
 
 jobs:
   generate:
