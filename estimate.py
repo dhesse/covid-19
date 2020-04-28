@@ -43,6 +43,9 @@ def estimate_R(df, country, rolling=7, W=3, Tc=5.2, min_cases=30):
 
 def plot_country(df, country, **kwargs):
     plt.figure()
+    plt.style.use('fivethirtyeight')
+    plt.rcParams['font.size'] = 9
+    plt.rcParams['lines.linewidth'] = 1.5
     estimates = estimate_R(df, country, **kwargs)
     estimates['median'].plot.line(marker='o', lw=0)
     plt.ylabel('$R_t$')
@@ -50,12 +53,13 @@ def plot_country(df, country, **kwargs):
     estimates['cases'].plot.line(secondary_y=True)
     plt.ylabel('new cases')
     plt.title(country)
-    plt.savefig(f"results/{country}.png", dpi=300)
+    plt.savefig(f"results/{country}.png", dpi=300, bbox_inches='tight')
     estimates.to_csv(f"results/{country}.csv")
 
 if __name__ == "__main__":
+    import progressbar
     countries = ['Spain', 'Germany', 'Norway', 'Denmark', 'Sweden', 'Italy', 'Korea, South', 'United Kingdom']
     data = get_data()
-    for c in countries:
+    for c in progressbar.progressbar(countries):
         plot_country(data, c)
 

@@ -1,3 +1,3 @@
 *.png
 .vscode
-.ynb_checkpoints
+.ipynb_checkpoints
