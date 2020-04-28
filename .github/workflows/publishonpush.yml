@@ -30,6 +30,6 @@ jobs:
         author_name: HH
         author_email: haholien@gmail.com
         message: "Updated charts"
-        add: "*.png"
+        add: "*.png, *.csv"
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
