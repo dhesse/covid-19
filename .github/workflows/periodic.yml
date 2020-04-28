@@ -1,12 +1,12 @@
 # This is a basic workflow to help you get started with Actions
 
-name: Periodic at noon utc
+name: Periodic at 0500 utc
 
 # Controls when the action will run. Triggers the workflow on push or pull request
 # events but only for the master branch
 on:
   schedule:
-  - cron: 0 14 * * *  # Every day at noon – https://crontab.guru
+  - cron: 0 08 * * *  # Every day at noon – https://crontab.guru
 
 jobs:
   generate:
@@ -32,6 +32,6 @@ jobs:
         author_name: HH
         author_email: haholien@gmail.com
         message: "Updated charts"
-        add: "*.png"
+        add: "results/*"
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
