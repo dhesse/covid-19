@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: Periodic
+name: Periodic at noon utc
 
 # Controls when the action will run. Triggers the workflow on push or pull request
 # events but only for the master branch
@@ -8,24 +8,30 @@ on:
   schedule:
   - cron: 0 12 * * *  # Every day at noon – https://crontab.guru
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
-  build:
-    # The type of runner that the job will run on
+  generate:
+
     runs-on: ubuntu-latest
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v2
-
-    # Runs a single command using the runners shell
-    - name: Run a one-line script
-      run: echo Hello, world!
-
-    # Runs a set of commands using the runners shell
-    - name: Run a multi-line script
+    - name: Set up Python
+      uses: actions/setup-python@v1
+      with:
+        python-version: '3.x'
+    - name: Install dependencies
       run: |
-        echo Add other actions to build,
-        echo test, and deploy your project.
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    - name: Generate graphs
+      run: |
+        python estimate.py    
+    - name: Commit changes
+      uses: EndBug/add-and-commit@v4
+      with:
+        author_name: HH
+        author_email: haholien@gmail.com
+        message: "Updated charts"
+        add: "*.png"
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
