@@ -29,10 +29,10 @@ def estimate_R(df, country, rolling=7, W=3, Tc=5.2, min_cases=30):
     L = scipy.stats.poisson.pmf(k[1:], lambdas.T)
     P  = L.copy()
     for i in range(L.shape[1]):
-        P[:,i] = L[:,i] / L[:,i].sum()
+        P[:,i] = L[:,i] / (L[:,i].sum() + 1e-30)
         for j in range(1, min(W, i)):
             P[:,i] *= L[:,i-j]
-            P[:,i] /= P[:,i].sum()
+            P[:,i] /= (P[:,i].sum() + 1e-30)
     lower = [r_range[numpy.argwhere(P[:,i].cumsum() >= 0.025)[0]][0] for i in range(len(k) - 1)]
     middle = [r_range[numpy.argwhere(P[:,i].cumsum() >= 0.5)[0]][0] for i in range(len(k) - 1)]
     upper = [r_range[numpy.argwhere(P[:,i].cumsum() >= 0.975)[0]][0] for i in range(len(k) - 1)]
@@ -43,23 +43,33 @@ def estimate_R(df, country, rolling=7, W=3, Tc=5.2, min_cases=30):
 
 def plot_country(df, country, **kwargs):
     plt.figure()
-    plt.style.use('fivethirtyeight')
-    plt.rcParams['font.size'] = 9
-    plt.rcParams['lines.linewidth'] = 1.5
     estimates = estimate_R(df, country, **kwargs)
+    estimates['one'] = 1
     estimates['median'].plot.line(marker='o', lw=0)
+    estimates['one'].plot.line(color='grey', alpha=0.8)
     plt.ylabel('$R_t$')
     plt.fill_between(estimates.index, estimates['lower'], estimates['upper'], alpha=0.6, color='grey')
+    #plt.line(estimates.index, [1]*estimates.shape(1))
     estimates['cases'].plot.line(secondary_y=True)
     plt.ylabel('new cases')
     plt.title(country)
     plt.savefig(f"results/{country}.png", dpi=300, bbox_inches='tight')
+    plt.close()
     estimates.to_csv(f"results/{country}.csv")
 
 if __name__ == "__main__":
     import progressbar
-    countries = ['Spain', 'Germany', 'Norway', 'Denmark', 'Sweden', 'Italy', 'Korea, South', 'United Kingdom']
+    countries = ['Spain', 'Germany', 'Norway', 'Denmark', 'Sweden', 'Italy', 'Korea, South',
+                 'United Kingdom', 'US', 'Canada', 'Singapore', 'Thailand', 'China', 'Japan',
+                 'Russia', 'Azerbaijan', 'Angola', 'Nigeria', 'Algeria', 'Venezuela', 'Libya',
+                 'Tanzania', 'Argentina', 'Australia', 'India', 'Turkey', 'United Arab Emirates',
+                 'Mexico', 'Netherlands', 'Nicaragua', 'Belgium', 'Ireland', 'Bahamas', 'Poland']
     data = get_data()
+    for c in countries:
+        assert c in data.columns
     for c in progressbar.progressbar(countries):
-        plot_country(data, c)
+        try:
+            plot_country(data, c)
+        except:
+            pass
 
