@@ -85,6 +85,8 @@ def plot_country(df, country, **kwargs):
     estimates['one'] = 1
     estimates['median'].plot.line(marker='o', lw=0)
     estimates['one'].plot.line(color='grey', alpha=0.8)
+    plt.ylabel('$R_t$')
+    plt.fill_between(estimates.index, estimates['lower'], estimates['upper'], alpha=0.6, color='grey')
 
     # Add horizontal dashed helper lines for R
     for y_tick in plt.yticks()[0]:
@@ -94,8 +96,6 @@ def plot_country(df, country, **kwargs):
         estimates[ix] = y_tick
         estimates[ix].plot.line(color='lightgray', alpha=.7, style='--')
 
-    plt.ylabel('$R_t$')
-    plt.fill_between(estimates.index, estimates['lower'], estimates['upper'], alpha=0.6, color='grey')
     #plt.line(estimates.index, [1]*estimates.shape(1))
     estimates['cases'].plot.line(secondary_y=True)
     plt.ylabel('new cases')
