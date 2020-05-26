@@ -29,9 +29,9 @@ def estimate_R(df, country, rolling=7, W=3, Tc=5.2, min_cases=30):
     # Moving/rolling average over deltas with gaussian smoothing
     # (window size specified by rolling, default 7 days)
     k = deltas.rolling(rolling, win_type='gaussian').mean(std=3).dropna().round()
-    tau = 1 # 
+    tau = 1 # Sample rate 1 day
     r_range = numpy.linspace(0, 10, 500) # Sample 500 R numbers from [0,10] (R = virus spread rate)
-    gamma = 1/Tc #
+    gamma = 1/Tc # Inverse of infectous period Tc
 
     # Outer product of k and e^(tau*gamma*(r_range-1))
     # Gives a m*n matrix where m=days and n=(R number samples: 500)
